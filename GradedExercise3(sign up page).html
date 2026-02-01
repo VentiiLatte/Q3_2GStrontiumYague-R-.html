@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clubs sign up</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f0f0f0; padding: 20px; }
+        form { width: 500px; margin: auto; background: white; padding: 20px; border: 1px solid #000; }
+        fieldset { margin-bottom: 15px; }
+        label { display: block; margin-top: 10px; }
+        input, select { width: 100%; padding: 5px; box-sizing: border-box; }
+        input[type="radio"] { width: auto; }
+        .buttons { text-align: center; margin-top: 20px; }
+        /* style for the invalid */
+        .invalid { border: 2px solid red; }
+        .view-btn { margin-left: 10px; }
+    </style>
+</head>
+<body>
+
+<form id="regForm">
+    <fieldset>
+        <legend>Student Information</legend>
+        <label>ID: <input type="number" id="sid" required></label>
+        <label>Full Name: <input type="text" id="sname" required onblur="checkField(this)"></label>
+        <label>Email: <input type="email" id="semail" required></label>
+    </fieldset>
+
+    <fieldset>
+        <legend>Club Details</legend>
+        <label>Grade: 
+            <select id="sgrade" required>
+                <option value="">-- select --</option>
+                <option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option>
+            </select>
+        </label>
+        <label>Mobile: <input type="text" id="smobile" required></label>
+        <label>Club:
+            <select id="sclub" required>
+                <option value="">-- select --</option>
+                <option>Bake Club</option><option>Himig Agham</option><option>Computron</option>
+            </select>
+        </label>
+        <label>Type: 
+            <input type="radio" name="stype" value="Intern" checked> Intern
+            <input type="radio" name="stype" value="Extern"> Extern
+        </label>
+    </fieldset>
+
+    <div class="buttons">
+        <input type="submit" value="Submit/Accept">
+        <input type="reset" value="Reset">
+        <button type="button" class="view-btn" onclick="location.href='viewSignUps.html'">View Signups</button>
+    </div>
+</form>
+
+<script>
+    function checkField(field) {
+        if (field.value == "") {
+            field.className = "invalid";
+        } else {
+            field.className = "";
+        }
+    }
+
+    // the data saver
+    document.getElementById('regForm').onsubmit = function(e) {
+        e.preventDefault(); //stops the page from reloading
+
+        if (confirm("Save this signup?")) {
+            // grabs all values from the form
+            let student = {
+                club: document.getElementById('sclub').value,
+                id: document.getElementById('sid').value,
+                name: document.getElementById('sname').value,
+                grade: document.getElementById('sgrade').value,
+                email: document.getElementById('semail').value,
+                mobile: document.getElementById('smobile').value,
+                type: document.querySelector('input[name="stype"]:checked').value
+            };
+
+            //check if theres already data in the storage
+            let list = JSON.parse(localStorage.getItem('myClubData')) || [];
+            
+            // add the new student to the list
+            list.push(student);
+            
+            // save the list back to localstorage
+            localStorage.setItem('myClubData', JSON.stringify(list));
+
+            alert("Saved successfully!");
+            this.reset();
+        }
+    };
+</script>
+</body>
+</html>
