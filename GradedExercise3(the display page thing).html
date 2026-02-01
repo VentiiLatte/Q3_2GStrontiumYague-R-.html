@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View list</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background-color: #000080; color: white; border: 1px solid black; padding: 10px; }
+        td { border: 1px solid black; padding: 10px; }
+        .msg { border: 1px solid black; padding: 10px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Show List of Students</h1>
+    <a href="index.html">Go Back</a>
+
+    <div style="margin: 20px 0;">
+        <label>Filter by Club:</label>
+        <select id="pickClub" onchange="showData()">
+            <option value="All">All</option>
+            <option>Bake Club</option>
+            <option>Himig Agham</option>
+            <option>Computron</option>
+        </select>
+    </div>
+  
+    <p>Total: <span id="count">0</span></p>
+    <div id="tableGoesHere"></div>
+  
+    <script>
+        function showData() {
+            var choice = document.getElementById('pickClub').value;
+            var area = document.getElementById('tableGoesHere');
+            //get data from storage
+            var data = JSON.parse(localStorage.getItem('myList')) || [];
+            // filters data
+            var filtered = [];
+            if (choice === "All") {
+                filtered = data;
+            } else {
+                for(var i=0; i<data.length; i++) {
+                    if(data[i].club === choice) {
+                        filtered.push(data[i]);
+                    }
+                }
+            }
+            document.getElementById('count').innerText = filtered.length;
+
+            if (filtered.length === 0) {
+                area.innerHTML = "<div class='msg'>No Sign Ups for the club</div>";
+                return;
+            }
+            //makees the table
+            var html = "<table><tr><th>Club</th><th>ID</th><th>Name</th><th>Grade</th><th>Email</th><th>Mobile</th><th>Type</th></tr>";
+            
+            for (var j=0; j<filtered.length; j++) {
+                html += "<tr>" +
+                    "<td>" + filtered[j].club + "</td>" +
+                    "<td>" + filtered[j].id + "</td>" +
+                    "<td>" + filtered[j].name + "</td>" +
+                    "<td>" + filtered[j].grade + "</td>" +
+                    "<td>" + filtered[j].email + "</td>" +
+                    "<td>" + filtered[j].mobile + "</td>" +
+                    "<td>" + filtered[j].type + "</td>" +
+                "</tr>";
+            }
+            html += "</table>";
+            area.innerHTML = html;
+        }
+
+        //shows table when page loads
+        window.onload = showData;
+    </script>
+</body>
+</html>
